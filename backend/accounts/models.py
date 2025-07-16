@@ -56,3 +56,24 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+from django.db import models
+from django.conf import settings
+
+class Appointment(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('cancelled', 'Cancelled'),
+        ('completed', 'Completed'),
+    ]
+    patient = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='patient_appointments', on_delete=models.CASCADE)
+    doctor = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='doctor_appointments', on_delete=models.CASCADE)
+    appointment_date = models.DateField()
+    timeslot = models.CharField(max_length=50)
+    notes = models.TextField(blank=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+
+    def __str__(self):
+        return f"{self.patient} with {self.doctor} on {self.appointment_date} at {self.timeslot}"

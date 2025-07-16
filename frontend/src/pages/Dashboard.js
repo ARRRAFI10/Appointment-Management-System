@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
@@ -40,7 +40,7 @@ const Dashboard = () => {
         {profile.user_type === "doctor" && (
           <>
             <button className="btn btn-primary me-2" onClick={() => navigate("/doctor-schedule")}>Manage Schedule</button>
-            <button className="btn btn-secondary" onClick={() => navigate("/doctor-appointments")}>View Appointments</button>
+            <button className="btn btn-secondary" onClick={() => navigate("/doctor/appointments")}>View Appointments</button>
           </>
         )}
         {profile.user_type === "admin" && (

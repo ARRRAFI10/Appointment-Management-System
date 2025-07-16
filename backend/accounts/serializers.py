@@ -49,3 +49,29 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
+
+from rest_framework import serializers
+from .models import Appointment, CustomUser
+
+class AppointmentSerializer(serializers.ModelSerializer):
+    patient = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = Appointment
+        fields = '__all__'
+
+    def validate(self, data):
+        # Check timeslot is in doctor's available_timeslots
+        doctor = data['doctor']
+        if data['timeslot'] not in (doctor.available_timeslots or ""):
+            raise serializers.ValidationError("Selected timeslot is not available for this doctor.")
+        # Check not in the past
+        from datetime import date
+        if data['appointment_date'] < date.today():
+            raise serializers.ValidationError("Appointment date cannot be in the past.")
+        return data
+
+class DoctorListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'full_name', 'available_timeslots']

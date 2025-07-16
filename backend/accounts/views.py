@@ -29,3 +29,33 @@ class ProfileView(APIView):
     def get(self, request):
         serializer = UserRegistrationSerializer(request.user)
         return Response(serializer.data)
+
+
+from rest_framework import generics, permissions
+from .models import Appointment
+from .serializers import AppointmentSerializer
+
+class AppointmentListCreateView(generics.ListCreateAPIView):
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.user_type == 'doctor':
+            return Appointment.objects.filter(doctor=user)
+        elif user.user_type == 'patient':
+            return Appointment.objects.filter(patient=user)
+        return Appointment.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(patient=self.request.user)
+
+from rest_framework import generics, permissions
+from .models import CustomUser
+from .serializers import DoctorListSerializer
+
+class DoctorListView(generics.ListAPIView):
+    queryset = CustomUser.objects.filter(user_type='doctor')
+    serializer_class = DoctorListSerializer
+    permission_classes = [permissions.IsAuthenticated]
