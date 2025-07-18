@@ -2,12 +2,14 @@ import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import BookAppointment from './pages/BookAppointment';
 import Dashboard from './pages/Dashboard';
+import DoctorAppointments from './pages/DoctorAppointments';
+import DoctorSummary from './pages/DoctorSummary';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
+import MyPrescriptions from './pages/MyPrescriptions';
 import Profile from './pages/Profile';
 import Register from './pages/Register';
-import DoctorAppointments from './pages/DoctorAppointments';
-import MyPrescriptions from './pages/MyPrescriptions';
+
 
 function App() {
   return (
@@ -20,6 +22,7 @@ function App() {
       <Route path="/book-appointment" element={<BookAppointment />} />
       <Route path="/doctor/appointments" element={<DoctorAppointments />} />
       <Route path="/my-prescriptions" element={<MyPrescriptions />} />
+      <Route path="/doctor/summary" element={<DoctorSummary />} />
     </Routes>
   );
 }

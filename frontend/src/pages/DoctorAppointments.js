@@ -138,6 +138,19 @@ const DoctorAppointments = () => {
     .then(res => setAppointments(res.data))
     .catch(err => setError("Failed to load appointments"));
   };
+  const updateStatus = async (id, status) => {
+    try {
+      const token = localStorage.getItem("access");
+      await axios.patch(
+        `http://127.0.0.1:8000/api/accounts/appointments/${id}/edit/`,
+        { status },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      reloadAppointments();
+    } catch (err) {
+      alert("Failed to update status");
+    }
+  };
 
   useEffect(() => {
     reloadAppointments();
@@ -166,7 +179,18 @@ const DoctorAppointments = () => {
               <td>{app.appointment_date}</td>
               <td>{app.timeslot}</td>
               <td>{app.notes}</td>
-              <td>{app.status}</td>
+              <td>
+                  <select
+                    value={app.status}
+                    onChange={e => updateStatus(app.id, e.target.value)}
+                    className="form-select form-select-sm"
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
+              </td>
               <td>
                 <button
                   className="btn btn-sm btn-success me-2"

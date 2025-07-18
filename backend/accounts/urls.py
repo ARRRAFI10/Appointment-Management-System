@@ -2,10 +2,12 @@ from django.urls import path
 from rest_framework_simplejwt.views import (TokenObtainPairView,
                                             TokenRefreshView, TokenVerifyView)
 
-from .views import (AppointmentListCreateView, DoctorListView,
-                    PrescriptionCreateView, PrescriptionDetailView,
-                    PrescriptionUpdateView, ProfileView, UserRegistrationView,
-                    prescription_pdf_view, upcoming_appointment_notification)
+from .views import (AppointmentListCreateView, AppointmentUpdateView,
+                    DoctorListView, PrescriptionCreateView,
+                    PrescriptionDetailView, PrescriptionUpdateView,
+                    ProfileView, UserRegistrationView,
+                    doctor_appointment_summary, prescription_pdf_view,
+                    upcoming_appointment_notification)
 
 urlpatterns = [
    path('register/', UserRegistrationView.as_view(), name='register'),
@@ -22,4 +24,6 @@ urlpatterns = [
    path('prescriptions/<int:pk>/edit/', PrescriptionUpdateView.as_view(), name='prescription-update'),
    path('prescriptions/<int:appointment>/', PrescriptionDetailView.as_view(), name='prescription-detail'),
    path('upcoming-appointment-notification/', upcoming_appointment_notification, name='upcoming-appointment-notification'),
+   path('appointments/<int:pk>/edit/', AppointmentUpdateView.as_view(), name='appointment-update'),
+   path('doctor/appointment-summary/', doctor_appointment_summary, name='doctor-appointment-summary'),
 ]

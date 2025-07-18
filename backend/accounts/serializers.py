@@ -83,14 +83,21 @@ class AppointmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate(self, data):
-        # Check timeslot is in doctor's available_timeslots
-        doctor = data['doctor']
-        if data['timeslot'] not in (doctor.available_timeslots or ""):
-            raise serializers.ValidationError("Selected timeslot is not available for this doctor.")
-        # Check not in the past
-        from datetime import date
-        if data['appointment_date'] < date.today():
-            raise serializers.ValidationError("Appointment date cannot be in the past.")
+        # Only run this check if doctor and timeslot are being updated/created
+        doctor = data.get('doctor')
+        timeslot = data.get('timeslot')
+        appointment_date = data.get('appointment_date')
+
+        if doctor and timeslot:
+            if timeslot not in (doctor.available_timeslots or ""):
+                raise serializers.ValidationError("Selected timeslot is not available for this doctor.")
+
+        # Only check date if appointment_date is present
+        if appointment_date:
+            from datetime import date
+            if appointment_date < date.today():
+                raise serializers.ValidationError("Appointment date cannot be in the past.")
+
         return data
 
 # from rest_framework import generics, permissions

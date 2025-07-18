@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
@@ -26,32 +26,54 @@ const Profile = () => {
   if (!profile) return <div>Loading...</div>;
 
   return (
-    <div className="container mt-5">
-      <h2>My Profile</h2>
-      <ul className="list-group">
-        <li className="list-group-item"><b>Name:</b> {profile.full_name}</li>
-        <li className="list-group-item"><b>Email:</b> {profile.email}</li>
-        <li className="list-group-item"><b>Mobile:</b> {profile.mobile}</li>
-        <li className="list-group-item"><b>User Type:</b> {profile.user_type}</li>
-        <li className="list-group-item"><b>Division:</b> {profile.division}</li>
-        <li className="list-group-item"><b>District:</b> {profile.district}</li>
-        <li className="list-group-item"><b>Thana:</b> {profile.thana}</li>
-        <li className="list-group-item"><b>Address:</b> {profile.address}</li>
-        {profile.profile_image && (
-          <li className="list-group-item">
-            <b>Profile Image:</b><br />
-            <img src={`http://127.0.0.1:8000${profile.profile_image}`} alt="Profile" width={100} />
-          </li>
-        )}
-        {profile.user_type === "doctor" && (
-          <>
-            <li className="list-group-item"><b>License Number:</b> {profile.license_number}</li>
-            <li className="list-group-item"><b>Experience Years:</b> {profile.experience_years}</li>
-            <li className="list-group-item"><b>Consultation Fee:</b> {profile.consultation_fee}</li>
-            <li className="list-group-item"><b>Available Timeslots:</b> {profile.available_timeslots}</li>
-          </>
-        )}
-      </ul>
+    <div className="container py-5">
+      <div className="row align-items-center">
+        <div className="col-md-3 text-center mb-4 mb-md-0">
+          {profile.profile_image ? (
+            <img
+              src={`http://127.0.0.1:8000${profile.profile_image}`}
+              alt="Profile"
+              className="rounded-circle shadow"
+              width={140}
+              height={140}
+              style={{ objectFit: "cover" }}
+            />
+          ) : (
+            <div
+              className="rounded-circle bg-secondary d-flex align-items-center justify-content-center"
+              style={{ width: 140, height: 140, color: "#fff", fontSize: 48 }}
+            >
+              {profile.full_name.charAt(0)}
+            </div>
+          )}
+        </div>
+        <div className="col-md-9">
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <h3 className="card-title mb-3">{profile.full_name}</h3>
+              <div className="row">
+                <div className="col-md-6">
+                  <p><b>Email:</b> {profile.email}</p>
+                  <p><b>Mobile:</b> {profile.mobile}</p>
+                  <p><b>User Type:</b> {profile.user_type}</p>
+                  <p><b>Division:</b> {profile.division}</p>
+                  <p><b>District:</b> {profile.district}</p>
+                  <p><b>Thana:</b> {profile.thana}</p>
+                  <p><b>Address:</b> {profile.address}</p>
+                </div>
+                {profile.user_type === "doctor" && (
+                  <div className="col-md-6">
+                    <p><b>License Number:</b> {profile.license_number}</p>
+                    <p><b>Experience Years:</b> {profile.experience_years}</p>
+                    <p><b>Consultation Fee:</b> {profile.consultation_fee}</p>
+                    <p><b>Available Timeslots:</b> {profile.available_timeslots}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
