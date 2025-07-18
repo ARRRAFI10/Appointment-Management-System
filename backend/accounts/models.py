@@ -77,3 +77,15 @@ class Appointment(models.Model):
 
     def __str__(self):
         return f"{self.patient} with {self.doctor} on {self.appointment_date} at {self.timeslot}"
+
+
+# backend/accounts/models.py
+class Prescription(models.Model):
+    appointment = models.OneToOneField('Appointment', on_delete=models.CASCADE, related_name='prescription')
+    doctor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='doctor_prescriptions')
+    patient = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='patient_prescriptions')
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Prescription for {self.patient.full_name} by {self.doctor.full_name} on {self.appointment.appointment_date}"

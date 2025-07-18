@@ -2,7 +2,7 @@ import re
 
 from rest_framework import serializers
 
-from .models import CustomUser
+from .models import Appointment, CustomUser, Prescription
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -52,10 +52,31 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 from rest_framework import serializers
+
 from .models import Appointment, CustomUser
 
-class AppointmentSerializer(serializers.ModelSerializer):
+
+class DoctorListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'full_name', 'available_timeslots']
+
+# backend/accounts/serializers.py
+class PrescriptionSerializer(serializers.ModelSerializer):
+    doctor = serializers.PrimaryKeyRelatedField(read_only=True)
     patient = serializers.PrimaryKeyRelatedField(read_only=True)
+    doctor_name = serializers.CharField(source="doctor.full_name", read_only=True)
+    patient_name = serializers.CharField(source="patient.full_name", read_only=True)
+    appointment_date = serializers.DateField(source="appointment.appointment_date", read_only=True)
+
+    class Meta:
+        model = Prescription
+        fields = ['id', 'appointment', 'doctor', 'doctor_name', 'patient', 'patient_name', 'appointment_date', 'content', 'created_at']
+        
+class AppointmentSerializer(serializers.ModelSerializer):
+    patient_name = serializers.CharField(source="patient.full_name", read_only=True)
+    doctor_name = serializers.CharField(source="doctor.full_name", read_only=True)
+    prescription = PrescriptionSerializer(read_only=True)
     class Meta:
         model = Appointment
         fields = '__all__'
@@ -71,7 +92,23 @@ class AppointmentSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Appointment date cannot be in the past.")
         return data
 
-class DoctorListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomUser
-        fields = ['id', 'full_name', 'available_timeslots']
+# from rest_framework import generics, permissions
+
+# from .models import Prescription
+# from .serializers import PrescriptionSerializer
+
+
+# class PrescriptionCreateView(generics.CreateAPIView):
+#     queryset = Prescription.objects.all()
+#     serializer_class = PrescriptionSerializer
+#     permission_classes = [permissions.IsAuthenticated]
+
+#     def perform_create(self, serializer):
+#         appointment = serializer.validated_data['appointment']
+#         serializer.save(doctor=self.request.user, patient=appointment.patient)
+
+# class PrescriptionDetailView(generics.RetrieveAPIView):
+#     queryset = Prescription.objects.all()
+#     serializer_class = PrescriptionSerializer
+#     permission_classes = [permissions.IsAuthenticated]
+#     lookup_field = 'appointment'

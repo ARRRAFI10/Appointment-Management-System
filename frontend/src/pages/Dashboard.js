@@ -35,6 +35,7 @@ const Dashboard = () => {
           <>
             <button className="btn btn-primary me-2" onClick={() => navigate("/book-appointment")}>Book Appointment</button>
             <button className="btn btn-secondary" onClick={() => navigate("/my-appointments")}>My Appointments</button>
+            <button className="btn btn-info me-2" onClick={() => navigate("/my-prescriptions")}>My Prescriptions</button>
           </>
         )}
         {profile.user_type === "doctor" && (

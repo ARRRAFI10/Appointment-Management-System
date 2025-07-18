@@ -59,3 +59,50 @@ class DoctorListView(generics.ListAPIView):
     queryset = CustomUser.objects.filter(user_type='doctor')
     serializer_class = DoctorListSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+# backend/accounts/views.py
+
+from rest_framework import generics, permissions
+from .models import Prescription
+from .serializers import PrescriptionSerializer
+
+class PrescriptionCreateView(generics.CreateAPIView):
+    queryset = Prescription.objects.all()
+    serializer_class = PrescriptionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        appointment = serializer.validated_data['appointment']
+        serializer.save(doctor=self.request.user, patient=appointment.patient)
+
+class PrescriptionDetailView(generics.RetrieveAPIView):
+    queryset = Prescription.objects.all()
+    serializer_class = PrescriptionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    lookup_field = 'appointment'
+    
+from rest_framework import generics, permissions
+from .models import Prescription
+from .serializers import PrescriptionSerializer
+
+class PrescriptionUpdateView(generics.UpdateAPIView):
+    queryset = Prescription.objects.all()
+    serializer_class = PrescriptionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    lookup_field = 'pk'  # default, so /prescriptions/<id>/
+
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
+def prescription_pdf_view(request, appointment):
+    prescription = Prescription.objects.get(appointment_id=appointment)
+    template = get_template('prescription_pdf.html')
+    html = template.render({'prescription': prescription})
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'filename=prescription_{appointment}.pdf'
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response

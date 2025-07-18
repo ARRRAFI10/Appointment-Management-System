@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Register from './pages/Register';
 import DoctorAppointments from './pages/DoctorAppointments';
+import MyPrescriptions from './pages/MyPrescriptions';
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/book-appointment" element={<BookAppointment />} />
       <Route path="/doctor/appointments" element={<DoctorAppointments />} />
-
+      <Route path="/my-prescriptions" element={<MyPrescriptions />} />
     </Routes>
   );
 }
