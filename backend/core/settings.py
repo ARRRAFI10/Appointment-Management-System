@@ -139,3 +139,26 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'  # or os.path.join(BASE_DIR, 'media')
+
+
+#kxdo jlmj rcag vnzh
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'arrrafi2018@gmail.com'         # <-- your sender email
+EMAIL_HOST_PASSWORD = 'kxdo jlmj rcag vnzh'     # <-- app password, not your Gmail password!
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    'send-appointment-reminders-every-hour': {
+        'task': 'accounts.tasks.send_appointment_reminders',
+        'schedule': crontab(minute=0, hour='*'),  # every hour
+    },
+}
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'

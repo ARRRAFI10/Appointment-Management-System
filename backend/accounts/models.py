@@ -1,5 +1,6 @@
+from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager,
+                                        PermissionsMixin)
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 USER_TYPE_CHOICES = (
     ('admin', 'Admin'),
@@ -58,8 +59,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-from django.db import models
 from django.conf import settings
+from django.db import models
+
 
 class Appointment(models.Model):
     STATUS_CHOICES = [
@@ -74,6 +76,7 @@ class Appointment(models.Model):
     timeslot = models.CharField(max_length=50)
     notes = models.TextField(blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    notified = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.patient} with {self.doctor} on {self.appointment_date} at {self.timeslot}"
@@ -89,3 +92,4 @@ class Prescription(models.Model):
 
     def __str__(self):
         return f"Prescription for {self.patient.full_name} by {self.doctor.full_name} on {self.appointment.appointment_date}"
+
