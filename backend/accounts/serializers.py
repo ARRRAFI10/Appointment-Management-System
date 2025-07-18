@@ -77,6 +77,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
     patient_name = serializers.CharField(source="patient.full_name", read_only=True)
     doctor_name = serializers.CharField(source="doctor.full_name", read_only=True)
     prescription = PrescriptionSerializer(read_only=True)
+    patient = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model = Appointment
         fields = '__all__'
