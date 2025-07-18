@@ -106,3 +106,27 @@ def prescription_pdf_view(request, appointment):
     if pisa_status.err:
         return HttpResponse('We had some errors <pre>' + html + '</pre>')
     return response
+
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from django.utils import timezone
+from datetime import timedelta
+from .models import Appointment
+from .serializers import AppointmentSerializer
+from rest_framework.response import Response
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def upcoming_appointment_notification(request):
+    now = timezone.now()
+    next_24h = now + timedelta(hours=24)
+    appointments = Appointment.objects.filter(
+        patient=request.user,
+        appointment_date__gte=now.date(),
+        appointment_date__lte=next_24h.date()
+    )
+    # You may want to filter by timeslot as well for more accuracy
+    if appointments.exists():
+        return Response({'notify': True, 'appointments': AppointmentSerializer(appointments, many=True).data})
+    return Response({'notify': False})

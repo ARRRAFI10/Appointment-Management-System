@@ -1,0 +1,10 @@
+.blinking-notification {
+    animation: blinker 1s linear infinite;
+    color: red;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+  @keyframes blinker {
+    50% { opacity: 0; }
+  }

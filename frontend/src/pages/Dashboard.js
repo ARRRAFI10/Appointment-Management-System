@@ -1,11 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./Dashboard.css"
 
 const Dashboard = () => {
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [notify, setNotify] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -19,7 +21,21 @@ const Dashboard = () => {
         setError("Failed to load profile. Please login again.");
       }
     };
+  
+    const fetchNotification = async () => {
+      try {
+        const token = localStorage.getItem("access");
+        const res = await axios.get("http://127.0.0.1:8000/api/accounts/upcoming-appointment-notification/", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setNotify(res.data.notify);
+      } catch (err) {
+        // Optionally handle error
+      }
+    };
+  
     fetchProfile();
+    fetchNotification();
   }, []);
 
   if (error) return <div className="alert alert-danger">{error}</div>;
@@ -49,6 +65,11 @@ const Dashboard = () => {
             <button className="btn btn-warning me-2" onClick={() => navigate("/admin/appointments")}>Manage Appointments</button>
             <button className="btn btn-success" onClick={() => navigate("/admin/reports")}>Generate Reports</button>
           </>
+        )}
+        {notify && (
+          <div className="blinking-notification">
+            You have an appointment within the next 24 hours!
+          </div>
         )}
       </div>
     </div>

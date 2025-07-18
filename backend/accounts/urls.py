@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import (TokenObtainPairView,
 from .views import (AppointmentListCreateView, DoctorListView,
                     PrescriptionCreateView, PrescriptionDetailView,
                     PrescriptionUpdateView, ProfileView, UserRegistrationView,
-                    prescription_pdf_view)
+                    prescription_pdf_view, upcoming_appointment_notification)
 
 urlpatterns = [
    path('register/', UserRegistrationView.as_view(), name='register'),
@@ -21,4 +21,5 @@ urlpatterns = [
    #path('prescriptions/<int:pk>/', PrescriptionUpdateView.as_view(), name='prescription-update'),
    path('prescriptions/<int:pk>/edit/', PrescriptionUpdateView.as_view(), name='prescription-update'),
    path('prescriptions/<int:appointment>/', PrescriptionDetailView.as_view(), name='prescription-detail'),
+   path('upcoming-appointment-notification/', upcoming_appointment_notification, name='upcoming-appointment-notification'),
 ]
