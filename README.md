@@ -29,7 +29,7 @@ A full-stack web application for managing doctor appointments, custom appointmen
 
 - **Backend:** Django, Django REST Framework, xhtml2pdf
 - **Frontend:** React, Axios, Bootstrap
-- **Database:** SQLite (default, can be changed)
+- **Database:** PostgreSQL
 
 ---
 
@@ -113,7 +113,3 @@ Appointment-Management-System/
 - **Admins:** Manage all users, appointments, and custom requests.
 
 ---
-
-
-
-
