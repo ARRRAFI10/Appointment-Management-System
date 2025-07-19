@@ -20,7 +20,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .serializers import \
-    UserRegistrationSerializer  # You can reuse or create a new serializer
+    UserRegistrationSerializer  
 
 
 class ProfileView(APIView):
@@ -65,7 +65,7 @@ class DoctorListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
 
-# backend/accounts/views.py
+
 
 from rest_framework import generics, permissions
 
@@ -98,7 +98,7 @@ class PrescriptionUpdateView(generics.UpdateAPIView):
     queryset = Prescription.objects.all()
     serializer_class = PrescriptionSerializer
     permission_classes = [permissions.IsAuthenticated]
-    lookup_field = 'pk'  # default, so /prescriptions/<id>/
+    lookup_field = 'pk' 
 
 from django.http import HttpResponse
 from django.template.loader import get_template
@@ -138,7 +138,7 @@ def upcoming_appointment_notification(request):
         appointment_date__gte=now.date(),
         appointment_date__lte=next_24h.date()
     )
-    # You may want to filter by timeslot as well for more accuracy
+    
     if appointments.exists():
         return Response({'notify': True, 'appointments': AppointmentSerializer(appointments, many=True).data})
     return Response({'notify': False})
@@ -176,30 +176,29 @@ def doctor_appointment_summary(request):
     if user.user_type != 'doctor':
         return Response({'detail': 'Only doctors can access this.'}, status=403)
 
-    # Get filter params
+    
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
 
     now = timezone.now().date()
 
-    # Calculate date ranges
-    # This month
+    
     first_day_this_month = now.replace(day=1)
     last_day_this_month = now.replace(day=calendar.monthrange(now.year, now.month)[1])
 
-    # Last month
+   
     first_day_last_month = (first_day_this_month - timedelta(days=1)).replace(day=1)
     last_day_last_month = first_day_this_month - timedelta(days=1)
 
-    # This year
+    
     first_day_this_year = now.replace(month=1, day=1)
     last_day_this_year = now.replace(month=12, day=31)
 
-    # Last year
+    
     first_day_last_year = (first_day_this_year - timedelta(days=1)).replace(month=1, day=1)
     last_day_last_year = first_day_this_year - timedelta(days=1)
 
-    # Helper to get stats
+    
     def get_stats(qs):
         completed = qs.filter(status='completed')
         pending = qs.filter(status='pending')
@@ -211,10 +210,10 @@ def doctor_appointment_summary(request):
             )['earned'] or 0
         }
 
-    # All appointments for this doctor
+    
     appts = Appointment.objects.filter(doctor=user)
 
-    # Predefined periods
+    
     last_year_stats = get_stats(appts.filter(
         appointment_date__gte=first_day_last_year,
         appointment_date__lte=last_day_last_year
@@ -232,7 +231,7 @@ def doctor_appointment_summary(request):
         appointment_date__lte=last_day_this_year
     ))
 
-    # Custom filter
+    
     filtered_stats = None
     if start_date and end_date:
         filtered_stats = get_stats(appts.filter(
@@ -250,7 +249,7 @@ def doctor_appointment_summary(request):
 
 
 from django.utils import timezone
-# Add to imports
+
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -264,7 +263,7 @@ from .serializers import AppointmentSerializer
 def my_appointments(request):
     user = request.user
     now = timezone.now()
-    # Assuming appointment_date is a DateTimeField
+    
     upcoming = Appointment.objects.filter(patient=user, appointment_date__gte=now).order_by('appointment_date')
     past = Appointment.objects.filter(patient=user, appointment_date__lt=now).order_by('-appointment_date')
     return Response({
@@ -278,7 +277,7 @@ from rest_framework import generics, permissions
 from .models import CustomAppointmentRequest
 from .serializers import CustomAppointmentRequestSerializer
 
-# Patient creates a request
+
 
 
 
@@ -290,13 +289,13 @@ class CustomAppointmentRequestCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(patient=self.request.user)
 
-# Admin views all requests
+
 class CustomAppointmentRequestListView(generics.ListAPIView):
     queryset = CustomAppointmentRequest.objects.all().order_by('-created_at')
     serializer_class = CustomAppointmentRequestSerializer
     permission_classes = [permissions.IsAdminUser]
 
-# Doctor views their requests
+
 class DoctorCustomAppointmentRequestListView(generics.ListAPIView):
     serializer_class = CustomAppointmentRequestSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -304,7 +303,7 @@ class DoctorCustomAppointmentRequestListView(generics.ListAPIView):
     def get_queryset(self):
         return CustomAppointmentRequest.objects.filter(doctor=self.request.user).order_by('-created_at')
 
-# Doctor approves/rejects
+
 class CustomAppointmentRequestUpdateView(generics.UpdateAPIView):
     queryset = CustomAppointmentRequest.objects.all()
     serializer_class = CustomAppointmentRequestSerializer
@@ -313,11 +312,11 @@ class CustomAppointmentRequestUpdateView(generics.UpdateAPIView):
 
     def perform_update(self, serializer):
         instance = serializer.save()
-        # Automatic appointment creation if status is set to doctor_approved
+        
         if instance.status == 'doctor_approved':
             from .models import Appointment
 
-            # Check if an appointment already exists for this request
+            
             exists = Appointment.objects.filter(
                 patient=instance.patient,
                 doctor=instance.doctor,

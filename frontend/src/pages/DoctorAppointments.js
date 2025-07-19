@@ -1,65 +1,10 @@
-// import axios from "axios";
-// import React, { useEffect, useState } from "react";
 
-// const DoctorAppointments = () => {
-//   const [appointments, setAppointments] = useState([]);
-//     const [selectedAppointment, setSelectedAppointment] = useState(null);
-//   const [error, setError] = useState("");
-
-//   useEffect(() => {
-//     axios.get("http://127.0.0.1:8000/api/accounts/appointments/", {
-//       headers: { Authorization: `Bearer ${localStorage.getItem("access")}` }
-//     })
-//     .then(res => setAppointments(res.data))
-//     .catch(err => setError("Failed to load appointments"));
-//   }, []);
-
-//   return (
-//     <div className="container mt-5">
-//       <h2>My Appointments</h2>
-//       {error && <div className="alert alert-danger">{error}</div>}
-//       <table className="table">
-//         <thead>
-//           <tr>
-//             <th>Patient</th>
-//             <th>Date</th>
-//             <th>Timeslot</th>
-//             <th>Notes</th>
-//             <th>Status</th>
-//             <th>Prescription</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {appointments.map(app => (
-//             <tr key={app.id}>
-//               <td>{app.patient_name}</td>
-//               <td>{app.appointment_date}</td>
-//               <td>{app.timeslot}</td>
-//               <td>{app.notes}</td>
-//               <td>{app.status}</td>
-//               <td>
-//               <button
-//           className="btn btn-sm btn-success"
-//           onClick={() => setSelectedAppointment(app)}
-//         >
-//           {app.prescription ? "Edit Prescription" : "Add Prescription"}
-//         </button>
-//               </td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-//     </div>
-//   );
-// };
-
-// export default DoctorAppointments;
 
 
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-// Prescription form modal component
+
 const PrescriptionForm = ({ appointment, onClose, onSaved }) => {
   const [content, setContent] = useState(appointment.prescription?.content || "");
   const [error, setError] = useState("");
@@ -70,14 +15,12 @@ const PrescriptionForm = ({ appointment, onClose, onSaved }) => {
     try {
       const token = localStorage.getItem("access");
       if (appointment.prescription) {
-        // Update existing prescription
         await axios.put(
             `http://127.0.0.1:8000/api/accounts/prescriptions/${appointment.prescription.id}/edit/`,
             { content, appointment: appointment.id },
             { headers: { Authorization: `Bearer ${token}` } }
         );
       } else {
-        // Create new prescription
         await axios.post(
           "http://127.0.0.1:8000/api/accounts/prescriptions/",
           { content, appointment: appointment.id },

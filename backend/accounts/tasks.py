@@ -1,4 +1,3 @@
-# backend/accounts/tasks.py
 from celery import shared_task
 from django.utils import timezone
 from datetime import timedelta
@@ -12,7 +11,7 @@ def send_appointment_reminders():
     appointments = Appointment.objects.filter(
         appointment_date=reminder_time.date(),
         timeslot__gte=reminder_time.time(),
-        notified=False  # Add this field to your model!
+        notified=False  
     )
     for appt in appointments:
         send_mail(

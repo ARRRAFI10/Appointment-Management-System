@@ -1,152 +1,3 @@
-// import React, { useState } from "react";
-// import axios from "axios";
-
-// const CustomAppointmentRequest = ({ doctorId, doctorName }) => {
-//   const [desiredDate, setDesiredDate] = useState("");
-//   const [desiredTimeslot, setDesiredTimeslot] = useState("");
-//   const [reason, setReason] = useState("");
-//   const [success, setSuccess] = useState("");
-//   const [error, setError] = useState("");
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     setError(""); setSuccess("");
-//     try {
-//       const token = localStorage.getItem("access");
-//       await axios.post("http://127.0.0.1:8000/api/accounts/custom-appointment-request/", {
-//         doctor: doctorId,
-//         desired_date: desiredDate,
-//         desired_timeslot: desiredTimeslot,
-//         reason,
-//       }, {
-//         headers: { Authorization: `Bearer ${token}` }
-//       });
-//       setSuccess("Request submitted! Admin will contact you.");
-//       setDesiredDate(""); setDesiredTimeslot(""); setReason("");
-//     } catch (err) {
-//       setError("Failed to submit request.");
-//     }
-//   };
-
-//   return (
-//     <div className="container py-4">
-//       <h3>Request Custom Appointment with {doctorName}</h3>
-//       {success && <div className="alert alert-success">{success}</div>}
-//       {error && <div className="alert alert-danger">{error}</div>}
-//       <form onSubmit={handleSubmit}>
-//         <div className="mb-3">
-//           <label>Date</label>
-//           <input type="date" className="form-control" value={desiredDate} onChange={e => setDesiredDate(e.target.value)} required />
-//         </div>
-//         <div className="mb-3">
-//           <label>Preferred Time</label>
-//           <input type="text" className="form-control" value={desiredTimeslot} onChange={e => setDesiredTimeslot(e.target.value)} placeholder="e.g. 3:00 PM - 3:30 PM" required />
-//         </div>
-//         <div className="mb-3">
-//           <label>Reason (optional)</label>
-//           <textarea className="form-control" value={reason} onChange={e => setReason(e.target.value)} />
-//         </div>
-//         <button className="btn btn-primary" type="submit">Submit Request</button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default CustomAppointmentRequest;
-
-// import React, { useState, useEffect } from "react";
-// import axios from "axios";
-
-// const CustomAppointmentRequest = (props) => {
-//   const [doctors, setDoctors] = useState([]);
-//   const [doctorId, setDoctorId] = useState(props.doctorId || "");
-//   const [desiredDate, setDesiredDate] = useState("");
-//   const [desiredTimeslot, setDesiredTimeslot] = useState("");
-//   const [reason, setReason] = useState("");
-//   const [success, setSuccess] = useState("");
-//   const [error, setError] = useState("");
-
-//   useEffect(() => {
-//     if (!props.doctorId) {
-//       const fetchDoctors = async () => {
-//         const token = localStorage.getItem("access");
-//         const res = await axios.get("http://127.0.0.1:8000/api/accounts/doctors/", {
-//           headers: { Authorization: `Bearer ${token}` }
-//         });
-//         setDoctors(res.data);
-//       };
-//       fetchDoctors();
-//     }
-//   }, [props.doctorId]);
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     setError(""); setSuccess("");
-//     try {
-//       const token = localStorage.getItem("access");
-//       await axios.post("http://127.0.0.1:8000/api/accounts/custom-appointment-request/", {
-//         doctor: doctorId,
-//         desired_date: desiredDate,
-//         desired_timeslot: desiredTimeslot,
-//         reason,
-//       }, {
-//         headers: { Authorization: `Bearer ${token}` }
-//       });
-//       setSuccess("Request submitted! Admin will contact you.");
-//       setDesiredDate(""); setDesiredTimeslot(""); setReason("");
-//       if (!props.doctorId) setDoctorId("");
-//     } catch (err) {
-//       setError(
-//         err.response?.data?.detail ||
-//         JSON.stringify(err.response?.data) ||
-//         "Failed to submit request."
-//       );
-//     }
-//   };
-
-//   return (
-//     <div className="container py-4">
-//       <h3>Request Custom Appointment</h3>
-//       {success && <div className="alert alert-success">{success}</div>}
-//       {error && <div className="alert alert-danger">{error}</div>}
-//       <form onSubmit={handleSubmit}>
-//         {!props.doctorId && (
-//           <div className="mb-3">
-//             <label>Doctor</label>
-//             <select
-//               className="form-control"
-//               value={doctorId}
-//               onChange={e => setDoctorId(e.target.value)}
-//               required
-//             >
-//               <option value="">Select Doctor</option>
-//               {doctors.map(doc => (
-//                 <option key={doc.id} value={doc.id}>
-//                   {doc.full_name}
-//                 </option>
-//               ))}
-//             </select>
-//           </div>
-//         )}
-//         <div className="mb-3">
-//           <label>Date</label>
-//           <input type="date" className="form-control" value={desiredDate} onChange={e => setDesiredDate(e.target.value)} required />
-//         </div>
-//         <div className="mb-3">
-//           <label>Preferred Time</label>
-//           <input type="text" className="form-control" value={desiredTimeslot} onChange={e => setDesiredTimeslot(e.target.value)} placeholder="e.g. 3:00 PM - 3:30 PM" required />
-//         </div>
-//         <div className="mb-3">
-//           <label>Reason (optional)</label>
-//           <textarea className="form-control" value={reason} onChange={e => setReason(e.target.value)} />
-//         </div>
-//         <button className="btn btn-primary" type="submit">Submit Request</button>
-//       </form>
-//     </div>
-//   );
-// };
-
-// export default CustomAppointmentRequest;
 
 
 import React, { useState, useEffect } from "react";
@@ -162,7 +13,7 @@ const CustomAppointmentRequest = ({ doctorId: propDoctorId, doctorName: propDoct
   const [error, setError] = useState("");
   const [loadingDoctors, setLoadingDoctors] = useState(false);
 
-  // Fetch doctors if doctorId is not provided as a prop
+  
   useEffect(() => {
     if (!propDoctorId) {
       setLoadingDoctors(true);
@@ -227,7 +78,6 @@ const CustomAppointmentRequest = ({ doctorId: propDoctorId, doctorName: propDoct
       {success && <div className="alert alert-success">{success}</div>}
       {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleSubmit}>
-        {/* Doctor select only if not passed as prop */}
         {!propDoctorId && (
           <div className="mb-3">
             <label>Doctor</label>

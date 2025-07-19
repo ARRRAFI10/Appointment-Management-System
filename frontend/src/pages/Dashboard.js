@@ -31,7 +31,7 @@ const Dashboard = () => {
         });
         setNotify(res.data.notify);
       } catch (err) {
-        // Optionally handle error
+        
       }
     };
 
@@ -39,7 +39,7 @@ const Dashboard = () => {
     fetchNotification();
   }, []);
 
-  // Fetch custom appointment requests for patient notification
+  
   useEffect(() => {
     const fetchCustomRequests = async () => {
       if (!profile || profile.user_type !== "patient") return;
@@ -58,7 +58,7 @@ const Dashboard = () => {
   if (error) return <div className="alert alert-danger">{error}</div>;
   if (!profile) return <div>Loading...</div>;
 
-  // Card data for each user type
+  
   const cardData = {
     patient: [
       { label: "Book Appointment", color: "primary", path: "/book-appointment" },
@@ -80,7 +80,7 @@ const Dashboard = () => {
 
   return (
     <div className="container py-5">
-      {/* Popup for custom appointment approval */}
+     
       {showPopup && (
         <div className="alert alert-success position-fixed top-0 end-0 m-4" style={{zIndex: 9999}}>
           Your custom appointment request has been approved!

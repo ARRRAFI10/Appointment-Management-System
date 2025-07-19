@@ -13,7 +13,7 @@ const MyPrescriptions = () => {
     .catch(err => setError("Failed to load prescriptions"));
   }, []);
 
-  // Filter only appointments with a prescription
+  
   const appointmentsWithPrescriptions = appointments.filter(app => app.prescription);
 
   return (

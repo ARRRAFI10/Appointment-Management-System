@@ -1,4 +1,3 @@
-// src/pages/Register.js
 import axios from "axios";
 import React, { useState } from "react";
 
@@ -46,7 +45,7 @@ const Register = () => {
           setError(errorMsg);
           return;
         }
-        setError(""); // Clear previous error
+        setError(""); 
         setForm({ ...form, [name]: file });
       }
     } else {
@@ -85,7 +84,7 @@ const Register = () => {
       {message && <div className="alert alert-success">{message}</div>}
       {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleSubmit} encType="multipart/form-data" autoComplete="off">
-        {/* Common fields */}
+        
         <input name="full_name" placeholder="Full Name" className="form-control mb-2" value={form.full_name} onChange={handleChange} required />
         {/* <input name="email" type="email" placeholder="Email" className="form-control mb-2" value={form.email} onChange={handleChange} required /> */}
         <input
@@ -120,7 +119,7 @@ const Register = () => {
         <input name="address" placeholder="Address" className="form-control mb-2" value={form.address} onChange={handleChange} required />
         <input name="profile_image" type="file" className="form-control mb-2" onChange={handleChange} accept="image/png, image/jpeg" />
 
-        {/* Doctor-only fields */}
+        
         {form.user_type === "doctor" && (
           <>
             <input name="license_number" placeholder="License Number" className="form-control mb-2" value={form.license_number} onChange={handleChange} required />

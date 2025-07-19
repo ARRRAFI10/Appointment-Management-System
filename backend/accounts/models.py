@@ -49,7 +49,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
-    # Doctor-specific fields
+    
     license_number = models.CharField(max_length=50, blank=True, null=True)
     experience_years = models.PositiveIntegerField(blank=True, null=True)
     consultation_fee = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
@@ -87,7 +87,7 @@ class Appointment(models.Model):
         return f"{self.patient} with {self.doctor} on {self.appointment_date} at {self.timeslot}"
 
 
-# backend/accounts/models.py
+
 class Prescription(models.Model):
     appointment = models.OneToOneField('Appointment', on_delete=models.CASCADE, related_name='prescription')
     doctor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='doctor_prescriptions')

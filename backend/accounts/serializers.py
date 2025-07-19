@@ -68,7 +68,7 @@ class DoctorListSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['id', 'full_name', 'available_timeslots']
 
-# backend/accounts/serializers.py
+
 class PrescriptionSerializer(serializers.ModelSerializer):
     doctor = serializers.PrimaryKeyRelatedField(read_only=True)
     patient = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -90,7 +90,6 @@ class AppointmentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def validate(self, data):
-        # Only run this check if doctor and timeslot are being updated/created
         doctor = data.get('doctor')
         timeslot = data.get('timeslot')
         appointment_date = data.get('appointment_date')
@@ -99,7 +98,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
             if timeslot not in (doctor.available_timeslots or ""):
                 raise serializers.ValidationError("Selected timeslot is not available for this doctor.")
 
-        # Only check date if appointment_date is present
+        
         if appointment_date:
             from datetime import date
             if appointment_date < date.today():
@@ -121,23 +120,3 @@ class CustomAppointmentRequestSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# from rest_framework import generics, permissions
-
-# from .models import Prescription
-# from .serializers import PrescriptionSerializer
-
-
-# class PrescriptionCreateView(generics.CreateAPIView):
-#     queryset = Prescription.objects.all()
-#     serializer_class = PrescriptionSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-
-#     def perform_create(self, serializer):
-#         appointment = serializer.validated_data['appointment']
-#         serializer.save(doctor=self.request.user, patient=appointment.patient)
-
-# class PrescriptionDetailView(generics.RetrieveAPIView):
-#     queryset = Prescription.objects.all()
-#     serializer_class = PrescriptionSerializer
-#     permission_classes = [permissions.IsAuthenticated]
-#     lookup_field = 'appointment'

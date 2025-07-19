@@ -52,7 +52,6 @@ const AdminCustomRequests = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setAssignModal({ show: false, req: null });
-      // Refresh requests
       const reqRes = await axios.get("http://127.0.0.1:8000/api/accounts/custom-appointment-requests/", {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -99,7 +98,7 @@ const AdminCustomRequests = () => {
         </tbody>
       </table>
 
-      {/* Assign Modal */}
+     
       {assignModal.show && (
         <div className="modal show d-block" tabIndex="-1" style={{ background: "rgba(0,0,0,0.5)" }}>
           <div className="modal-dialog">

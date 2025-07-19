@@ -15,7 +15,7 @@ const BookAppointment = () => {
   const [error, setError] = useState("");
   const [showRequestForm, setShowRequestForm] = useState(false);
 
-  // Fetch doctors on mount
+  
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/api/accounts/doctors/", {
       headers: { Authorization: `Bearer ${localStorage.getItem("access")}` }
@@ -24,7 +24,7 @@ const BookAppointment = () => {
     .catch(err => setError("Failed to load doctors"));
   }, []);
 
-  // Update timeslots when doctor or date changes
+  
   useEffect(() => {
     const selectedDoctor = doctors.find(d => d.id === Number(form.doctor));
     if (selectedDoctor) {
@@ -36,18 +36,17 @@ const BookAppointment = () => {
     }
   }, [form.doctor, doctors]);
 
-  // Determine available slots for the selected doctor and date
-  // (Assuming all timeslots are available unless you have a way to check booked slots for the date)
-  const availableSlots = timeslots; // If you have booked slots, filter them out here
+  
+  const availableSlots = timeslots; 
 
-  // Get selected doctor info
+  
   const selectedDoctorId = form.doctor;
   const selectedDoctor = doctors.find(d => d.id === Number(selectedDoctorId));
   const selectedDoctorName = selectedDoctor ? selectedDoctor.full_name : "";
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    setShowRequestForm(false); // Hide custom form if user changes selection
+    setShowRequestForm(false); 
   };
 
   const handleSubmit = async e => {
@@ -124,7 +123,7 @@ const BookAppointment = () => {
         </button>
       </form>
 
-      {/* Show custom request option if no slots are available for selected doctor and date */}
+     
       {form.doctor && form.appointment_date && availableSlots.length === 0 && (
         <>
           <div className="alert alert-warning mt-3">
