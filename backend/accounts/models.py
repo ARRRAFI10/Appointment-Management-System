@@ -107,6 +107,7 @@ class CustomAppointmentRequest(models.Model):
     reason = models.TextField(blank=True)
     status = models.CharField(max_length=20, choices=[
         ('pending', 'Pending'),
+        ('pending_doctor', 'Pending Doctor'),
         ('doctor_approved', 'Doctor Approved'),
         ('doctor_rejected', 'Doctor Rejected'),
         ('scheduled', 'Scheduled'),

@@ -8,6 +8,7 @@ const Dashboard = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [notify, setNotify] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -38,6 +39,22 @@ const Dashboard = () => {
     fetchNotification();
   }, []);
 
+  // Fetch custom appointment requests for patient notification
+  useEffect(() => {
+    const fetchCustomRequests = async () => {
+      if (!profile || profile.user_type !== "patient") return;
+      try {
+        const token = localStorage.getItem("access");
+        const res = await axios.get("http://127.0.0.1:8000/api/accounts/patient/custom-appointment-requests/", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const approved = res.data.find(r => r.status === "doctor_approved" && !r.notified);
+        if (approved) setShowPopup(true);
+      } catch {}
+    };
+    fetchCustomRequests();
+  }, [profile]);
+
   if (error) return <div className="alert alert-danger">{error}</div>;
   if (!profile) return <div>Loading...</div>;
 
@@ -63,6 +80,14 @@ const Dashboard = () => {
 
   return (
     <div className="container py-5">
+      {/* Popup for custom appointment approval */}
+      {showPopup && (
+        <div className="alert alert-success position-fixed top-0 end-0 m-4" style={{zIndex: 9999}}>
+          Your custom appointment request has been approved!
+          <button className="btn-close float-end" onClick={() => setShowPopup(false)}></button>
+        </div>
+      )}
+
       <div className="row align-items-center mb-4">
         <div className="col-md-2 text-center">
           {profile.profile_image ? (

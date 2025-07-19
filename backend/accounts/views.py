@@ -278,12 +278,9 @@ from rest_framework import generics, permissions
 from .models import CustomAppointmentRequest
 from .serializers import CustomAppointmentRequestSerializer
 
-
 # Patient creates a request
 
-from rest_framework import generics, permissions
 
-from .serializers import CustomAppointmentRequestSerializer
 
 
 class CustomAppointmentRequestCreateView(generics.CreateAPIView):
@@ -313,6 +310,29 @@ class CustomAppointmentRequestUpdateView(generics.UpdateAPIView):
     serializer_class = CustomAppointmentRequestSerializer
     permission_classes = [permissions.IsAuthenticated]
     lookup_field = 'pk'
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        # Automatic appointment creation if status is set to doctor_approved
+        if instance.status == 'doctor_approved':
+            from .models import Appointment
+
+            # Check if an appointment already exists for this request
+            exists = Appointment.objects.filter(
+                patient=instance.patient,
+                doctor=instance.doctor,
+                appointment_date=instance.desired_date,
+                timeslot=instance.desired_timeslot
+            ).exists()
+            if not exists:
+                Appointment.objects.create(
+                    patient=instance.patient,
+                    doctor=instance.doctor,
+                    appointment_date=instance.desired_date,
+                    timeslot=instance.desired_timeslot,
+                    notes=instance.reason,
+                    status='confirmed'
+                )
 
 from rest_framework import generics, permissions
 

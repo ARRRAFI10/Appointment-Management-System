@@ -7,13 +7,13 @@ const DoctorCustomRequests = () => {
 
   useEffect(() => {
     const fetchRequests = async () => {
+      const token = localStorage.getItem("access");
       try {
-        const token = localStorage.getItem("access");
         const res = await axios.get("http://127.0.0.1:8000/api/accounts/doctor/custom-appointment-requests/", {
           headers: { Authorization: `Bearer ${token}` }
         });
         setRequests(res.data);
-      } catch (err) {
+      } catch {
         setError("Failed to load requests.");
       }
     };
@@ -21,20 +21,20 @@ const DoctorCustomRequests = () => {
   }, []);
 
   const handleDecision = async (id, status) => {
+    const token = localStorage.getItem("access");
     try {
-      const token = localStorage.getItem("access");
       await axios.patch(`http://127.0.0.1:8000/api/accounts/custom-appointment-request/${id}/`, { status }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setRequests(requests.map(r => r.id === id ? { ...r, status } : r));
-    } catch (err) {
+    } catch {
       alert("Failed to update status.");
     }
   };
 
   return (
     <div className="container py-4">
-      <h3>Custom Appointment Requests</h3>
+      <h3>My Custom Appointment Requests</h3>
       {error && <div className="alert alert-danger">{error}</div>}
       <table className="table">
         <thead>
@@ -56,9 +56,9 @@ const DoctorCustomRequests = () => {
               <td>{req.reason}</td>
               <td>{req.status}</td>
               <td>
-                {req.status === "pending" && (
+                {req.status === "pending_doctor" && (
                   <>
-                    <button className="btn btn-success btn-sm me-2" onClick={() => handleDecision(req.id, "doctor_approved")}>Approve</button>
+                    <button className="btn btn-success btn-sm me-2" onClick={() => handleDecision(req.id, "doctor_approved")}>Accept</button>
                     <button className="btn btn-danger btn-sm" onClick={() => handleDecision(req.id, "doctor_rejected")}>Reject</button>
                   </>
                 )}
