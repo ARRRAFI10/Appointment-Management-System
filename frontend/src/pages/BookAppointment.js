@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import CustomAppointmentRequest from "./CustomAppointmentRequest";
 
 const BookAppointment = () => {
   const [doctors, setDoctors] = useState([]);
@@ -12,6 +13,7 @@ const BookAppointment = () => {
   const [timeslots, setTimeslots] = useState([]);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [showRequestForm, setShowRequestForm] = useState(false);
 
   // Fetch doctors on mount
   useEffect(() => {
@@ -22,7 +24,7 @@ const BookAppointment = () => {
     .catch(err => setError("Failed to load doctors"));
   }, []);
 
-  // Update timeslots when doctor changes
+  // Update timeslots when doctor or date changes
   useEffect(() => {
     const selectedDoctor = doctors.find(d => d.id === Number(form.doctor));
     if (selectedDoctor) {
@@ -34,8 +36,18 @@ const BookAppointment = () => {
     }
   }, [form.doctor, doctors]);
 
+  // Determine available slots for the selected doctor and date
+  // (Assuming all timeslots are available unless you have a way to check booked slots for the date)
+  const availableSlots = timeslots; // If you have booked slots, filter them out here
+
+  // Get selected doctor info
+  const selectedDoctorId = form.doctor;
+  const selectedDoctor = doctors.find(d => d.id === Number(selectedDoctorId));
+  const selectedDoctorName = selectedDoctor ? selectedDoctor.full_name : "";
+
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setShowRequestForm(false); // Hide custom form if user changes selection
   };
 
   const handleSubmit = async e => {
@@ -93,9 +105,10 @@ const BookAppointment = () => {
           value={form.timeslot}
           onChange={handleChange}
           required
+          disabled={!availableSlots.length}
         >
           <option value="">Select Timeslot</option>
-          {timeslots.map((slot, idx) => (
+          {availableSlots.map((slot, idx) => (
             <option key={idx} value={slot}>{slot}</option>
           ))}
         </select>
@@ -106,8 +119,32 @@ const BookAppointment = () => {
           value={form.notes}
           onChange={handleChange}
         />
-        <button type="submit" className="btn btn-primary">Book</button>
+        <button type="submit" className="btn btn-primary" disabled={!availableSlots.length}>
+          Book
+        </button>
       </form>
+
+      {/* Show custom request option if no slots are available for selected doctor and date */}
+      {form.doctor && form.appointment_date && availableSlots.length === 0 && (
+        <>
+          <div className="alert alert-warning mt-3">
+            No slots available for this doctor on the selected date.
+          </div>
+          <button
+            className="btn btn-outline-primary mt-2"
+            onClick={() => setShowRequestForm(true)}
+          >
+            Request Custom Appointment
+          </button>
+        </>
+      )}
+
+      {showRequestForm && (
+        <CustomAppointmentRequest
+          doctorId={selectedDoctorId}
+          doctorName={selectedDoctorName}
+        />
+      )}
     </div>
   );
 };

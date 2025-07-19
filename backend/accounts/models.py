@@ -98,3 +98,22 @@ class Prescription(models.Model):
     def __str__(self):
         return f"Prescription for {self.patient.full_name} by {self.doctor.full_name} on {self.appointment.appointment_date}"
 
+
+class CustomAppointmentRequest(models.Model):
+    patient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='custom_requests')
+    doctor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='custom_requests_for_doctor')
+    desired_date = models.DateField()
+    desired_timeslot = models.CharField(max_length=50)
+    reason = models.TextField(blank=True)
+    status = models.CharField(max_length=20, choices=[
+        ('pending', 'Pending'),
+        ('doctor_approved', 'Doctor Approved'),
+        ('doctor_rejected', 'Doctor Rejected'),
+        ('scheduled', 'Scheduled'),
+    ], default='pending')
+    admin_comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Request by {self.patient.full_name} to {self.doctor.full_name} for {self.desired_date} {self.desired_timeslot}"
+

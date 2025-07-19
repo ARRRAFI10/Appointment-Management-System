@@ -107,6 +107,20 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
         return data
 
+
+from .models import CustomAppointmentRequest
+
+
+class CustomAppointmentRequestSerializer(serializers.ModelSerializer):
+    patient_name = serializers.CharField(source="patient.full_name", read_only=True)
+    doctor_name = serializers.CharField(source="doctor.full_name", read_only=True)
+    patient = serializers.PrimaryKeyRelatedField(read_only=True)  # <-- ADD THIS LINE
+
+    class Meta:
+        model = CustomAppointmentRequest
+        fields = '__all__'
+
+
 # from rest_framework import generics, permissions
 
 # from .models import Prescription

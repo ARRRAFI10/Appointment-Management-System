@@ -249,13 +249,15 @@ def doctor_appointment_summary(request):
     })
 
 
+from django.utils import timezone
 # Add to imports
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
 from .models import Appointment
 from .serializers import AppointmentSerializer
-from django.utils import timezone
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -269,3 +271,58 @@ def my_appointments(request):
         'upcoming': AppointmentSerializer(upcoming, many=True).data,
         'past': AppointmentSerializer(past, many=True).data,
     })
+
+
+from rest_framework import generics, permissions
+
+from .models import CustomAppointmentRequest
+from .serializers import CustomAppointmentRequestSerializer
+
+
+# Patient creates a request
+
+from rest_framework import generics, permissions
+
+from .serializers import CustomAppointmentRequestSerializer
+
+
+class CustomAppointmentRequestCreateView(generics.CreateAPIView):
+    serializer_class = CustomAppointmentRequestSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(patient=self.request.user)
+
+# Admin views all requests
+class CustomAppointmentRequestListView(generics.ListAPIView):
+    queryset = CustomAppointmentRequest.objects.all().order_by('-created_at')
+    serializer_class = CustomAppointmentRequestSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+# Doctor views their requests
+class DoctorCustomAppointmentRequestListView(generics.ListAPIView):
+    serializer_class = CustomAppointmentRequestSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return CustomAppointmentRequest.objects.filter(doctor=self.request.user).order_by('-created_at')
+
+# Doctor approves/rejects
+class CustomAppointmentRequestUpdateView(generics.UpdateAPIView):
+    queryset = CustomAppointmentRequest.objects.all()
+    serializer_class = CustomAppointmentRequestSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    lookup_field = 'pk'
+
+from rest_framework import generics, permissions
+
+from .models import CustomAppointmentRequest
+from .serializers import CustomAppointmentRequestSerializer
+
+
+class PatientCustomAppointmentRequestListView(generics.ListAPIView):
+    serializer_class = CustomAppointmentRequestSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return CustomAppointmentRequest.objects.filter(patient=self.request.user).order_by('-created_at')

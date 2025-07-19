@@ -47,11 +47,13 @@ const Dashboard = () => {
       { label: "Book Appointment", color: "primary", path: "/book-appointment" },
       { label: "My Appointments", color: "secondary", path: "/my-appointments" },
       { label: "My Prescriptions", color: "info", path: "/my-prescriptions" },
+      { label: "Custom Appointment", color: "primary", path: "/custom-appointments" } // FIXED
     ],
     doctor: [
       { label: "Manage Schedule", color: "primary", path: "/doctor-schedule" },
       { label: "View Appointments", color: "secondary", path: "/doctor/appointments" },
       { label: "Summary Report", color: "info", path: "/doctor/summary" },
+      { label: "Custom Request", color: "primary", path: "/doctor/custom-requests" } // FIXED
     ],
     admin: [
       { label: "Manage Appointments", color: "warning", path: "/admin/appointments" },

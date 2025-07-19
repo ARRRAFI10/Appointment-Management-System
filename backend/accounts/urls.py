@@ -3,11 +3,15 @@ from rest_framework_simplejwt.views import (TokenObtainPairView,
                                             TokenRefreshView, TokenVerifyView)
 
 from .views import (AppointmentListCreateView, AppointmentUpdateView,
-                    DoctorListView, PrescriptionCreateView,
-                    PrescriptionDetailView, PrescriptionUpdateView,
-                    ProfileView, UserRegistrationView,
-                    doctor_appointment_summary, prescription_pdf_view,
-                    upcoming_appointment_notification,my_appointments)
+                    CustomAppointmentRequestCreateView,
+                    CustomAppointmentRequestListView,
+                    CustomAppointmentRequestUpdateView,
+                    DoctorCustomAppointmentRequestListView, DoctorListView,
+                    PrescriptionCreateView, PrescriptionDetailView,
+                    PrescriptionUpdateView, ProfileView, UserRegistrationView,
+                    doctor_appointment_summary, my_appointments,
+                    prescription_pdf_view, upcoming_appointment_notification,
+                     PatientCustomAppointmentRequestListView,)
 
 urlpatterns = [
    path('register/', UserRegistrationView.as_view(), name='register'),
@@ -27,4 +31,9 @@ urlpatterns = [
    path('appointments/<int:pk>/edit/', AppointmentUpdateView.as_view(), name='appointment-update'),
    path('doctor/appointment-summary/', doctor_appointment_summary, name='doctor-appointment-summary'),
    path('my-appointments/', my_appointments, name='my-appointments'),
+   path('custom-appointment-request/', CustomAppointmentRequestCreateView.as_view(), name='custom-appointment-request-create'),
+   path('custom-appointment-requests/', CustomAppointmentRequestListView.as_view(), name='custom-appointment-request-list'),
+   path('doctor/custom-appointment-requests/', DoctorCustomAppointmentRequestListView.as_view(), name='doctor-custom-appointment-request-list'),
+   path('custom-appointment-request/<int:pk>/', CustomAppointmentRequestUpdateView.as_view(), name='custom-appointment-request-update'),
+   path('patient/custom-appointment-requests/', PatientCustomAppointmentRequestListView.as_view(), name='patient-custom-appointment-request-list'),
 ]
