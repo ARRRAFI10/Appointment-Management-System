@@ -42,6 +42,13 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
                 if not data.get(field):
                     raise serializers.ValidationError(f"{field} is required for doctors.")
         return data
+    def validate_profile_image(self, value):
+        if value:
+            if value.size > 5 * 1024 * 1024:
+                raise serializers.ValidationError("Image size must be 5MB or less.")
+            if not value.content_type in ["image/jpeg", "image/png"]:
+                raise serializers.ValidationError("Only JPEG and PNG images are allowed.")
+        return value
 
     def create(self, validated_data):
         password = validated_data.pop('password')

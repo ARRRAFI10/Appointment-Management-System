@@ -1,6 +1,6 @@
 // src/pages/Register.js
-import React, { useState } from "react";
 import axios from "axios";
+import React, { useState } from "react";
 
 const initialState = {
   full_name: "",
@@ -19,6 +19,18 @@ const initialState = {
   available_timeslots: "",
 };
 
+const validateImage = (file) => {
+  const allowedTypes = ["image/jpeg", "image/png"];
+  const maxSize = 5 * 1024 * 1024; // 5MB
+  if (!allowedTypes.includes(file.type)) {
+    return "Only JPEG and PNG images are allowed.";
+  }
+  if (file.size > maxSize) {
+    return "Image size must be 5MB or less.";
+  }
+  return null;
+};
+
 const Register = () => {
   const [form, setForm] = useState(initialState);
   const [message, setMessage] = useState("");
@@ -27,7 +39,16 @@ const Register = () => {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "profile_image") {
-      setForm({ ...form, [name]: files[0] });
+      const file = files[0];
+      if (file) {
+        const errorMsg = validateImage(file);
+        if (errorMsg) {
+          setError(errorMsg);
+          return;
+        }
+        setError(""); // Clear previous error
+        setForm({ ...form, [name]: file });
+      }
     } else {
       setForm({ ...form, [name]: value });
     }
@@ -96,3 +117,4 @@ const Register = () => {
 };
 
 export default Register;
+

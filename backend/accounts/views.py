@@ -247,3 +247,25 @@ def doctor_appointment_summary(request):
         'this_year': this_year_stats,
         'filtered': filtered_stats
     })
+
+
+# Add to imports
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from .models import Appointment
+from .serializers import AppointmentSerializer
+from django.utils import timezone
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def my_appointments(request):
+    user = request.user
+    now = timezone.now()
+    # Assuming appointment_date is a DateTimeField
+    upcoming = Appointment.objects.filter(patient=user, appointment_date__gte=now).order_by('appointment_date')
+    past = Appointment.objects.filter(patient=user, appointment_date__lt=now).order_by('-appointment_date')
+    return Response({
+        'upcoming': AppointmentSerializer(upcoming, many=True).data,
+        'past': AppointmentSerializer(past, many=True).data,
+    })

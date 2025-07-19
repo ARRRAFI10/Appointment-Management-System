@@ -7,7 +7,7 @@ from .views import (AppointmentListCreateView, AppointmentUpdateView,
                     PrescriptionDetailView, PrescriptionUpdateView,
                     ProfileView, UserRegistrationView,
                     doctor_appointment_summary, prescription_pdf_view,
-                    upcoming_appointment_notification)
+                    upcoming_appointment_notification,my_appointments)
 
 urlpatterns = [
    path('register/', UserRegistrationView.as_view(), name='register'),
@@ -26,4 +26,5 @@ urlpatterns = [
    path('upcoming-appointment-notification/', upcoming_appointment_notification, name='upcoming-appointment-notification'),
    path('appointments/<int:pk>/edit/', AppointmentUpdateView.as_view(), name='appointment-update'),
    path('doctor/appointment-summary/', doctor_appointment_summary, name='doctor-appointment-summary'),
+   path('my-appointments/', my_appointments, name='my-appointments'),
 ]

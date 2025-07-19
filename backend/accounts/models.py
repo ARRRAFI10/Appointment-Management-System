@@ -10,8 +10,13 @@ USER_TYPE_CHOICES = (
 
 DIVISION_CHOICES = (
     ('Dhaka', 'Dhaka'),
-    ('Chittagong', 'Chittagong'),
-    # Add all divisions as needed
+    ('Chattogram', 'Chattogram'),
+    ('Rajshahi', 'Rajshahi'),
+    ('Khulna', 'Khulna'),
+    ('Barishal', 'Barishal'),
+    ('Sylhet', 'Sylhet'),
+    ('Rangpur', 'Rangpur'),
+    ('Mymensingh', 'Mymensingh'),
 )
 
 class CustomUserManager(BaseUserManager):
