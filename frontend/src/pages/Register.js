@@ -84,12 +84,32 @@ const Register = () => {
       <h2>Register</h2>
       {message && <div className="alert alert-success">{message}</div>}
       {error && <div className="alert alert-danger">{error}</div>}
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
+      <form onSubmit={handleSubmit} encType="multipart/form-data" autoComplete="off">
         {/* Common fields */}
         <input name="full_name" placeholder="Full Name" className="form-control mb-2" value={form.full_name} onChange={handleChange} required />
-        <input name="email" type="email" placeholder="Email" className="form-control mb-2" value={form.email} onChange={handleChange} required />
+        {/* <input name="email" type="email" placeholder="Email" className="form-control mb-2" value={form.email} onChange={handleChange} required /> */}
+        <input
+          name="email"
+          type="email"
+          placeholder="Email"
+          className="form-control mb-2"
+          value={form.email}
+          onChange={handleChange}
+          required
+          autoComplete="off"
+        />
         <input name="mobile" placeholder="Mobile (+88...)" className="form-control mb-2" value={form.mobile} onChange={handleChange} required />
-        <input name="password" type="password" placeholder="Password" className="form-control mb-2" value={form.password} onChange={handleChange} required />
+        {/* <input name="password" type="password" placeholder="Password" className="form-control mb-2" value={form.password} onChange={handleChange} required /> */}
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          className="form-control mb-2"
+          value={form.password}
+          onChange={handleChange}
+          required
+          autoComplete="new-password"
+        />
         <select name="user_type" className="form-control mb-2" value={form.user_type} onChange={handleChange}>
           <option value="patient">Patient</option>
           <option value="doctor">Doctor</option>

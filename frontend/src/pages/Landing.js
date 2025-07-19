@@ -1,10 +1,9 @@
-import React from "react";
 import { Link } from "react-router-dom";
-import "./Landing.css"; // Create this for custom styles
+import "./Landing.css";
 
 const Landing = () => (
   <div className="landing-bg">
-    {/* Navbar */}
+
     <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
       <div className="container">
         <span className="navbar-brand fw-bold text-success fs-3">
@@ -21,7 +20,6 @@ const Landing = () => (
       </div>
     </nav>
 
-    {/* Hero Section */}
     <header className="container text-center py-5">
       <h1 className="display-4 fw-bold mb-3">
         Make Healthcare Simple in Bangladesh
@@ -34,7 +32,6 @@ const Landing = () => (
       </Link>
     </header>
 
-    {/* Features Section */}
     <section className="container py-5">
       <div className="row text-center">
         <div className="col-md-4 mb-4">
@@ -61,7 +58,6 @@ const Landing = () => (
       </div>
     </section>
 
-    {/* About Section */}
     <section className="container py-4">
       <div className="row align-items-center">
         <div className="col-md-6 mb-4 mb-md-0">
@@ -82,10 +78,9 @@ const Landing = () => (
       </div>
     </section>
 
-    {/* Footer */}
     <footer className="bg-light text-center py-3 mt-5">
       <small>
-        © 2024 Bangladesh HealthCare Portal | Contact: info@healthcarebd.com
+        © 2025 Bangladesh HealthCare Portal | Contact: info@healthcarebd.com
       </small>
     </footer>
   </div>
