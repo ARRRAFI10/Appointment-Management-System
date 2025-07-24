@@ -19,8 +19,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import \
-    UserRegistrationSerializer  
+from .serializers import UserRegistrationSerializer
 
 
 class ProfileView(APIView):
@@ -51,6 +50,35 @@ class AppointmentListCreateView(generics.ListCreateAPIView):
         return Appointment.objects.all()
 
     def perform_create(self, serializer):
+        doctor = self.request.data.get('doctor')
+        appointment_date = self.request.data.get('appointment_date')
+        timeslot = self.request.data.get('timeslot')
+
+        
+        from .models import Appointment, CustomUser
+        try:
+            doctor_obj = CustomUser.objects.get(id=doctor, user_type='doctor')
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError("Selected doctor does not exist.")
+
+        
+        if timeslot not in (doctor_obj.available_timeslots or ""):
+            raise serializers.ValidationError("Selected timeslot is not available for this doctor.")
+
+        
+        if Appointment.objects.filter(
+            doctor=doctor_obj,
+            appointment_date=appointment_date,
+            timeslot=timeslot
+        ).exists():
+            raise serializers.ValidationError("This timeslot is already booked for the selected doctor.")
+
+        
+        from datetime import date
+        if appointment_date < str(date.today()):
+            raise serializers.ValidationError("Appointment date cannot be in the past.")
+
+        
         serializer.save(patient=self.request.user)
 
 from rest_framework import generics, permissions
@@ -249,7 +277,6 @@ def doctor_appointment_summary(request):
 
 
 from django.utils import timezone
-
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -276,10 +303,6 @@ from rest_framework import generics, permissions
 
 from .models import CustomAppointmentRequest
 from .serializers import CustomAppointmentRequestSerializer
-
-
-
-
 
 
 class CustomAppointmentRequestCreateView(generics.CreateAPIView):
