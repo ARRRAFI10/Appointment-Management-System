@@ -30,7 +30,7 @@ class ProfileView(APIView):
         return Response(serializer.data)
 
 
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, serializers
 
 from .models import Appointment
 from .serializers import AppointmentSerializer
@@ -71,7 +71,8 @@ class AppointmentListCreateView(generics.ListCreateAPIView):
             appointment_date=appointment_date,
             timeslot=timeslot
         ).exists():
-            raise serializers.ValidationError("This timeslot is already booked for the selected doctor.")
+            raise serializers.ValidationError("The doctor already has an appointment at this time. You can make a custom appointment request for a different time.")
+
 
         
         from datetime import date
